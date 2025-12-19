@@ -16,20 +16,33 @@ public class SubstitutionCipher implements Cipherable {
 
 	@Override
 	public String encode(String plain) {
-		// TODO Auto-generated method stub
-		return null;
+    String cipher = "";
+
+    for (int i = 0; i < plain.length(); i++) {
+      int numericLetter = plain.charAt(i) - 'a';
+      cipher += this.key.charAt(numericLetter);
+    }
+ 
+		return cipher;
 	}
 
 	@Override
-	public String decode(String cypher) {
-		// TODO Auto-generated method stub
-		return null;
+	public String decode(String cipher) {
+    String plain = "";
+
+    for (int i = 0; i < cipher.length(); i++) {
+      char currentChar = cipher.charAt(i);
+      int correctIndex = this.key.indexOf(currentChar);
+
+      plain += (char) (correctIndex + 'a');
+    }
+
+		return plain;
 	}
 
 	@Override
 	public String description() {
-		// TODO Auto-generated method stub
-		return null;
+		return "has a scrambled list of letters, and swaps them";
 	}
 	
 	
