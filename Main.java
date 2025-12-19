@@ -7,6 +7,7 @@ public class Main {
 		System.out.println(cc);
 		System.out.println(c.decode(cc));
 
+    SubstitutionCipher s = new SubstitutionCipher();  
 	}
 
 }

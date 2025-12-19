@@ -1,16 +1,18 @@
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 public class SubstitutionCipher implements Cipherable {
 
 	private String key;
 	
 	public SubstitutionCipher() {
-		List alpa = Arrays.asList("abcdefghijklmnopqrstuvwxyz".toCharArray());
+    this.key = "";
+		String alpa = "abcdefghijklmnopqrstuvwxyz";
 		
-		while (alpa.size() > 0) {
-			int randIndex = (int) (Math.random() * alpa.length);
-			this.key += alpa.get(randIndex);
-			alpa.remove(randIndex);
+		while (alpa.length() > 0) {
+			int randIndex = (int) (Math.random() * (alpa.length()));
+			this.key += alpa.charAt(randIndex);
+			alpa = alpa.substring(0, randIndex) + alpa.substring(randIndex + 1);
 		}
 	}
 
@@ -44,6 +46,6 @@ public class SubstitutionCipher implements Cipherable {
 	public String description() {
 		return "has a scrambled list of letters, and swaps them";
 	}
-	
+
 	
 }
