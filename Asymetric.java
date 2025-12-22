@@ -8,7 +8,7 @@ public class Asymetric implements Cipherable {
     while (b != 0) {
       int temp = b;
       b = a % b;
-      a = temp
+      a = temp;
     }
 
     return Math.abs(a);
@@ -55,15 +55,16 @@ public class Asymetric implements Cipherable {
     //not secure lol
     int[] primes = {43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
 
-    int p = primes[(int) (Math.random() * primes.length())];
-    int q;
+    int p = primes[(int) (Math.random() * primes.length)];
+    int q = primes[(int) (Math.random() * primes.length)];
     boolean f = true;
 
     while (f) {
-      q = primes[(int) (Math.random() * primes.length())];
       if (q != p) {
         f = false;
+        break;
       }
+      q = primes[(int) (Math.random() * primes.length)];
     }
 
     this.n = p * q;
@@ -87,9 +88,19 @@ public class Asymetric implements Cipherable {
     this.d = D;
   }
   
-  public int getPub() {
-    return e;
-  }
+  private static int modPow(int base, int exponent, int modulus) {
+    int result = 1;
+    base = base % modulus;
+
+    while (exponent > 0) {
+        if ((exponent & 1) == 1) {
+            result = (result * base) % modulus;
+        }
+        base = (base * base) % modulus;
+        exponent >>= 1;
+    }
+    return result;
+}
 
   @Override
   public String encode(String plain) {
@@ -102,13 +113,14 @@ public class Asymetric implements Cipherable {
     int[] cypherEncoded = new int[plainEncoded.length];
 
     for (int i = 0; i < cypherEncoded.length; i++) {
-      cypherEncoded[i] = Math.pow(plainEncoded[i], this.e) % this.n;
+      cypherEncoded[i] = modPow(plainEncoded[i],this.e, this.n);
     }
 
     StringBuilder cypher = new StringBuilder();
 
     for (int num : cypherEncoded) {
       cypher.append(num);
+      cypher.append(" ");
     }
 
     return cypher.toString();
@@ -117,16 +129,17 @@ public class Asymetric implements Cipherable {
 
   @Override
   public String decode(String cypher) {
-    int[] cypherEncoded = new int[cypher.length()];
 
-    for (int i = 0; i < cypher.length(); i++) {
-      cypherEncoded[i] = (int) cypher.charAt(i);
+    String[] cypherSplit = cypher.trim().split("\\s+");
+    int[] cypherEncoded = new int[cypherSplit.length];
+    for (int i = 0; i < cypherEncoded.length; i++) {
+      cypherEncoded[i] = Integer.parseInt(cypherSplit[i]);
     }
 
     int[] plainEncoded = new int[cypherEncoded.length];
 
     for (int i = 0; i < plainEncoded.length; i++) {
-      plainEncoded[i] = Math.pow(cypherEncoded[i], this.d) % this.n;
+      plainEncoded[i] = modPow(cypherEncoded[i], this.d, this.n);
     }
 
     StringBuilder plain = new StringBuilder();

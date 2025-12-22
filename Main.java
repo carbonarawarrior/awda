@@ -14,6 +14,12 @@ public class Main {
     System.out.println(cc);
     cc = s.decode(cc);
     System.out.println(cc);
+
+    Asymetric a = new Asymetric();  
+    cc = a.encode(cc);
+    System.out.println(cc);
+    cc = a.decode(cc);
+    System.out.println(cc);
 	}
 
 }
