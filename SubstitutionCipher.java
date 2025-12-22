@@ -1,6 +1,3 @@
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
 public class SubstitutionCipher implements Cipherable {
 
 	private String key;
