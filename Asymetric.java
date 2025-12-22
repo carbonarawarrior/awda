@@ -85,12 +85,12 @@ public class Asymetric implements Cipherable {
     }
 
     this.d = inverseMod(e, phiN); 
-    File keyfile = new File("d.txt");
+    File keyfile = new File(this.d + ".key");
     try {
       if (keyfile.createNewFile()) {
         System.out.println("Key stored in " + keyfile.getName());
       } else {
-        System.out.println("d.txt already exists");
+        System.out.println("keyfile already exists");
       }
     } catch (IOException e) {
       e.printStackTrace();
