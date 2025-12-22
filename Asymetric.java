@@ -1,0 +1,148 @@
+public class Asymetric implements Cipherable {
+  
+  private int e;//this is part pub
+  private int d;//this is part private 
+  private int n;
+
+  private static int gcd(int a, int b) {
+    while (b != 0) {
+      int temp = b;
+      b = a % b;
+      a = temp
+    }
+
+    return Math.abs(a);
+  }
+
+  //thanks to chat for this function, but ill put comments to try to understand it
+  private static int inverseMod(int e, int phi) {
+    //t is coefficient for phi, newT coefficient for e
+    int t = 0;
+    int newT = 1;
+    //r is current remainder, newR is next
+    int r = phi;
+    int newR = e;
+
+    int quotient;
+    int temp;
+    while (newR != 0) {
+      //this is the standard part of the euclidian algo
+      quotient = r / newR;
+
+      temp = t;
+      t = newT;
+      newT = temp - quotient * newT;
+
+      temp = r;
+      r = newR;
+      newR = temp - quotient * newR;
+    }
+/*      this is a check included by chat, im pretty sure i take care of it with the preconditions though
+    if (r > 1) {
+      throw new ArithmeticException("e is not invertible");
+    }
+*/
+    //just enforces a positive result
+    if (t < 0) {
+      t += phi;
+    }
+
+    return t;
+  }
+  
+  public Asymetric() {
+
+    //not secure lol
+    int[] primes = {43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
+
+    int p = primes[(int) (Math.random() * primes.length())];
+    int q;
+    boolean f = true;
+
+    while (f) {
+      q = primes[(int) (Math.random() * primes.length())];
+      if (q != p) {
+        f = false;
+      }
+    }
+
+    this.n = p * q;
+    int phiN = (p-1)*(q-1);
+
+    boolean coPrime = true;
+    while (coPrime) {
+      //this is terrible efficency, we could jst use e = 65537
+      this.e = (int) ((Math.random()+2)*99999);
+      if ((e != 1) && (Math.abs(gcd(e, phiN)) == 1)) {
+        coPrime = false;
+      }
+    }
+
+    this.d = inverseMod(e, phiN); 
+  }
+
+  public Asymetric(int E, int D) {
+    //implement checks
+    this.e = E;
+    this.d = D;
+  }
+  
+  public int getPub() {
+    return e;
+  }
+
+  @Override
+  public String encode(String plain) {
+    int[] plainEncoded = new int[plain.length()];
+
+    for (int i = 0; i < plain.length(); i++) {
+      plainEncoded[i] = (int) plain.charAt(i);
+    }
+
+    int[] cypherEncoded = new int[plainEncoded.length];
+
+    for (int i = 0; i < cypherEncoded.length; i++) {
+      cypherEncoded[i] = Math.pow(plainEncoded[i], this.e) % this.n;
+    }
+
+    StringBuilder cypher = new StringBuilder();
+
+    for (int num : cypherEncoded) {
+      cypher.append(num);
+    }
+
+    return cypher.toString();
+
+  }
+
+  @Override
+  public String decode(String cypher) {
+    int[] cypherEncoded = new int[cypher.length()];
+
+    for (int i = 0; i < cypher.length(); i++) {
+      cypherEncoded[i] = (int) cypher.charAt(i);
+    }
+
+    int[] plainEncoded = new int[cypherEncoded.length];
+
+    for (int i = 0; i < plainEncoded.length; i++) {
+      plainEncoded[i] = Math.pow(cypherEncoded[i], this.d) % this.n;
+    }
+
+    StringBuilder plain = new StringBuilder();
+
+    for (int num : plainEncoded) {
+      plain.append((char) num);
+    }
+
+    return plain.toString();
+
+  }
+
+  @Override
+  public String description() {
+    return "uses bad version of rsa encryption";
+  }
+  
+  
+}
