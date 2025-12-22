@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 //note all the constants are stored in ints
 //if we had larger primes in the no args constructor, or were given larger primes, then this could cause overflows
 //Bigint is prolly more appropriate but i dont know it and this is only for understanding so
@@ -83,14 +85,28 @@ public class Asymetric implements Cipherable {
     }
 
     this.d = inverseMod(e, phiN); 
+    File keyfile = new File("d.txt");
+    try {
+      if (keyfile.createNewFile()) {
+        System.out.println("Key stored in " + keyfile.getName());
+      } else {
+        System.out.pritnln("d.txt already exists");
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
-  public Asymetric(int E, int D) {
+  //tis constructor is severly flawed
+  //
+  /* i give up, ur banned from using this lol
+  public Asymetric(int E, int D, int N) {
     //implement checks
     this.e = E;
     this.d = D;
+    this.n = N;
   }
-  
+  */
   private static int modPow(int base, int exponent, int modulus) {
     int result = 1;
     base = base % modulus;
@@ -103,7 +119,15 @@ public class Asymetric implements Cipherable {
         exponent >>= 1;
     }
     return result;
-}
+  }
+
+  public int getE() {
+    return this.e;
+  }
+
+  public int getN() {
+    return this.n;
+  }
 
   @Override
   public String encode(String plain) {
