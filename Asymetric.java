@@ -90,7 +90,7 @@ public class Asymetric implements Cipherable {
       if (keyfile.createNewFile()) {
         System.out.println("Key stored in " + keyfile.getName());
       } else {
-        System.out.pritnln("d.txt already exists");
+        System.out.println("d.txt already exists");
       }
     } catch (IOException e) {
       e.printStackTrace();
