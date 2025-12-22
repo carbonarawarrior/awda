@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.IOException;
 //note all the constants are stored in ints
 //if we had larger primes in the no args constructor, or were given larger primes, then this could cause overflows
 //Bigint is prolly more appropriate but i dont know it and this is only for understanding so
@@ -85,28 +83,43 @@ public class Asymetric implements Cipherable {
     }
 
     this.d = inverseMod(e, phiN); 
-    File keyfile = new File(this.d + ".key");
-    try {
-      if (keyfile.createNewFile()) {
-        System.out.println("Key stored in " + keyfile.getName());
-      } else {
-        System.out.println("keyfile already exists");
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+
+    System.out.println("n = " + this.n);
+    System.out.println("e = " + this.e);
+    System.out.println("d = " + this.d);
   }
 
-  //tis constructor is severly flawed
-  //
-  /* i give up, ur banned from using this lol
+  
   public Asymetric(int E, int D, int N) {
-    //implement checks
-    this.e = E;
-    this.d = D;
-    this.n = N;
+    boolean failed = false;
+    int[] checks = {5, 8, 12, 72, 101, 1231, 6767};
+    int c;
+    for (int i = 0; i < checks.length; i++) {
+      if (checks[i] >= N) {break;}
+      c = modPow(checks[i], E, N);
+      int p = modPow(c, D, N);
+
+      if (checks[i] != p) {
+        failed = true;
+        break;
+      }
+    }
+
+    if (E == 1 || D == 1 || N == 1) {
+      failed = true;
+    }
+    if (failed) {
+      System.out.println("Invalid input, setting to error values");
+      this.e = -1;
+      this.d = -1;
+      this.n = -1;
+    } else {
+      this.e = E;
+      this.d = D;
+      this.n = N;
+    }
   }
-  */
+  
   private static int modPow(int base, int exponent, int modulus) {
     int result = 1;
     base = base % modulus;
