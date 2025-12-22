@@ -1,3 +1,6 @@
+//note all the constants are stored in ints
+//if we had larger primes in the no args constructor, or were given larger primes, then this could cause overflows
+//Bigint is prolly more appropriate but i dont know it and this is only for understanding so
 public class Asymetric implements Cipherable {
   
   private int e;//this is part pub
